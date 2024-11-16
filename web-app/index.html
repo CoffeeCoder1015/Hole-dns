@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>🕳 Hole DNS metrics</title>
+    <script src="eventmanager.js"></script>
+    <script src="chart.umd.js"></script>
+    <style>
+        body {
+            background-color: #01121f;
+            color: white;
+        }
+
+        #status {
+            height: 30px;
+            width: 220px;
+            text-align: center;
+            justify-content: center;
+            background-color: #b30419;
+            border-style: solid;
+            border-width: 3px;
+            border-color: #960012;
+            border-radius: 5px;
+        }
+
+        #actives {
+            height: 30px;
+            width: 220px;
+            text-align: center;
+            justify-content: center;
+            background-color: #29BEB0;
+            border-style: solid;
+            border-width: 3px;
+            border-color: #23a699;
+            border-radius: 5px;
+        }
+
+        #topbar {
+            display: flex;
+            flex-direction: row;
+        }
+
+        #topbar>* {
+            margin-right: 10px;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        #logs {
+            width: 40%;
+        }
+
+        .log {
+            border-color: #021e33;
+            border-style: solid;
+            border-width: 3px;
+            border-radius: 5px;
+            background-color: #022642;
+        }
+
+        #main {
+            display: flex;
+            flex-direction: row;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="topbar">
+        <p id="status">Waiting for connection 🛑</p>
+        <p id="actives">Active goroutines:</p>
+        <p id="curMode"></p>
+    </div>
+    
+    <button onclick="stopServer()">
+        Stop Server
+    </button>
+
+    <p>Past connections currently displayed as:</p>
+    <button id="cd" onclick="changeDisplay()">
+        Bar Chart
+    </button>
+    <p>Number of logs stored:</p>
+    <input type="text" id="storedlogs" value="5">
+    <div id="main">
+        <div id="logs"></div>
+        <div style="margin-left: 8%; position: relative; top: -20vh;">
+            <div class="chart-warapper" style="margin-bottom: 7%; height:400px; width:800px; border-radius: 22px;
+        background: #01121f;
+        box-shadow:  10px 10px 20px #010910,
+                     -10px -10px 20px #021b2f;">
+                <canvas id="grChart"></canvas>
+            </div>
+            <div class="chart-warapper" style="border-radius: 22px;
+        background: #01121f;
+        box-shadow:  10px 10px 20px #010910,
+                     -10px -10px 20px #021b2f;">
+                <canvas id="connsChart"></canvas>
+            </div>
+        </div>
+
+        <script>
+            const grctx = document.getElementById("grChart").getContext('2d')
+            const connsCtx = document.getElementById("connsChart")
+            var grchart = new Chart(grctx, {
+                type: 'line',
+                data: {
+                    labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60],
+                    datasets: [{
+                        label: 'Active Goroutines',
+                        data: activeGRs,
+                        fill: true,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1,
+                    }]
+                },
+            })
+
+            var connsChart = new Chart(connsCtx, {
+                type: "bar",
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: [],
+                    }],
+                },
+            })
+        </script>
+    </div>
+
+
+</body>
+
+</html>
